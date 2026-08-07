@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 760" role="img" aria-label="纸片人占位图">
+  <defs>
+    <linearGradient id="coat" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#c92b25"/><stop offset="1" stop-color="#6e1017"/>
+    </linearGradient>
+    <pattern id="paper" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M0 4L28 1M3 21L26 18" stroke="#4b2418" stroke-opacity=".14"/>
+    </pattern>
+  </defs>
+  <path d="M260 35c-85 0-137 61-137 148 0 67 31 113 63 137-42 17-76 65-91 131L38 701c62 23 145 34 222 34s160-11 222-34l-57-250c-15-66-49-114-91-131 32-24 63-70 63-137 0-87-52-148-137-148z" fill="#eadcbc"/>
+  <path d="M186 320c25 17 123 17 148 0 42 18 76 65 91 131l57 250c-62 23-145 34-222 34S100 724 38 701l57-250c15-66 49-113 91-131z" fill="url(#coat)"/>
+  <path d="M168 308l92 116 92-116-34 265H202z" fill="#1c1715"/>
+  <path d="M260 424l-33-42 33-42 33 42z" fill="#d5b467"/>
+  <path d="M128 161c10-83 55-126 132-126 83 0 128 48 136 139-36-15-60-41-72-78-42 54-106 74-196 65z" fill="#211717"/>
+  <path d="M203 198c10 8 21 8 31 0M286 198c10 8 21 8 31 0M230 254c20 13 40 13 60 0" fill="none" stroke="#211713" stroke-width="8" stroke-linecap="round"/>
+  <path d="M260 35c-85 0-137 61-137 148 0 67 31 113 63 137-42 17-76 65-91 131L38 701c62 23 145 34 222 34s160-11 222-34l-57-250c-15-66-49-114-91-131 32-24 63-70 63-137 0-87-52-148-137-148z" fill="url(#paper)"/>
+  <text x="260" y="664" text-anchor="middle" fill="#e9d8b7" font-family="monospace" font-size="17" letter-spacing="5">PLACEHOLDER</text>
+</svg>

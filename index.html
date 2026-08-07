@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#160f0c" />
+    <meta
+      name="description"
+      content="Komichi 的纸片剧场个人主页——一场关于创作、经历与联系的小型演出。"
+    />
+    <title>Komichi's Paper Theater</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-grain" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <a class="brand" href="#opening" aria-label="返回开场">
+        <span class="brand-mark">K</span>
+        <span class="brand-copy">KOMICHI<br />PAPER THEATER</span>
+      </a>
+      <nav class="chapter-nav" aria-label="剧目导航">
+        <a href="#opening" data-chapter="0">序</a>
+        <a href="#about" data-chapter="1">我</a>
+        <a href="#works" data-chapter="2">作</a>
+        <a href="#contact" data-chapter="3">终</a>
+      </nav>
+      <div class="show-status"><i></i> NOW SHOWING</div>
+    </header>
+
+    <main>
+      <div class="theater" aria-label="纸片剧场舞台">
+        <div class="backdrop" aria-hidden="true">
+          <div class="backdrop-halo"></div>
+          <div class="floor-lines"></div>
+        </div>
+
+        <div class="scene-copy" aria-live="polite">
+          <article class="story-card intro-card is-active" data-scene="0">
+            <p class="eyebrow">ACT 00 · OPENING</p>
+            <h1>嗨，我是<br /><em>Komichi.</em></h1>
+            <p class="lead">欢迎来到我的纸片剧场。这里收集好奇心、古怪点子，以及那些慢慢变成现实的小东西。</p>
+            <div class="scroll-note"><span></span>向下滚动，演出开始</div>
+          </article>
+
+          <article class="story-card right-card" data-scene="1">
+            <p class="eyebrow">ACT 01 · ABOUT ME</p>
+            <h2>幕后的<br />造梦者</h2>
+            <p>我喜欢把复杂的问题，做成轻盈、直觉且带一点故事感的体验。</p>
+            <dl class="mini-facts">
+              <div><dt>身份</dt><dd>创作者 / 设计师</dd></div>
+              <div><dt>坐标</dt><dd>China · Earth</dd></div>
+              <div><dt>状态</dt><dd>持续折腾中</dd></div>
+            </dl>
+          </article>
+
+          <article class="story-card left-card" data-scene="2">
+            <p class="eyebrow">ACT 02 · SELECTED WORKS</p>
+            <h2>最近的<br />几出戏</h2>
+            <div class="work-list">
+              <a href="#" aria-label="项目一，纸上宇宙"><span>01</span><strong>纸上宇宙</strong><small>Visual / Web</small></a>
+              <a href="#" aria-label="项目二，漫游指南"><span>02</span><strong>漫游指南</strong><small>Product / Story</small></a>
+              <a href="#" aria-label="项目三，未命名剧目"><span>03</span><strong>未命名剧目</strong><small>Coming soon</small></a>
+            </div>
+          </article>
+
+          <article class="story-card right-card finale-card" data-scene="3">
+            <p class="eyebrow">FINAL ACT · CONTACT</p>
+            <h2>一起写<br />下一幕？</h2>
+            <p>如果你有一个有趣的想法，或只是想来后台打个招呼，欢迎随时联系。</p>
+            <a class="ticket-button" href="mailto:hello@example.com">
+              <span>GET IN TOUCH</span><b>→</b>
+            </a>
+            <p class="social-links"><a href="#">GitHub</a><i>·</i><a href="#">Bilibili</a><i>·</i><a href="#">X / Twitter</a></p>
+          </article>
+        </div>
+
+        <div class="performer" aria-label="纸片人角色占位图">
+          <div class="paper-shadow" aria-hidden="true"></div>
+          <img
+            src="./placeholder-character.svg"
+            alt="纸片剧场的角色"
+            draggable="false"
+          />
+          <div class="performer-label" aria-hidden="true">THE PLAYER</div>
+          <div class="puppet-stick" aria-hidden="true"></div>
+        </div>
+
+        <div class="spotlight" aria-hidden="true"></div>
+
+        <div class="curtain curtain-top" aria-hidden="true">
+          <div class="top-valance top-valance-back"></div>
+          <div class="top-valance top-valance-mid"></div>
+          <div class="top-valance top-valance-front"></div>
+          <div class="curtain-rope rope-left"></div>
+          <div class="curtain-rope rope-right"></div>
+        </div>
+        <div class="side-curtain side-curtain-left" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="side-curtain side-curtain-right" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="curtain curtain-bottom" aria-hidden="true">
+          <div class="bottom-fold bottom-fold-back"></div>
+          <div class="bottom-fold bottom-fold-mid"></div>
+          <div class="bottom-fold bottom-fold-front"></div>
+        </div>
+
+        <div class="stage-counter" aria-hidden="true"><span>00</span><b>/</b><small>03</small></div>
+      </div>
+
+      <div class="scroll-track" aria-hidden="true">
+        <section id="opening" data-step="0"></section>
+        <section id="about" data-step="1"></section>
+        <section id="works" data-step="2"></section>
+        <section id="contact" data-step="3"></section>
+      </div>
+    </main>
+
+    <noscript>请启用 JavaScript 观看纸片剧场的滚动演出。</noscript>
+    <script src="./script.js"></script>
+  </body>
+</html>
