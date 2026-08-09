@@ -6,12 +6,13 @@ const counter = document.querySelector('.stage-counter span');
 const performerImage = performer.querySelector('img');
 const sceneSections = [...document.querySelectorAll('.scroll-track section')];
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const mobilePerformerDrop = 12;
 
 const scenes = [
-  { x: 70, y: 56, mobileY: 27, r: 5 },
-  { x: 27, y: 43, mobileY: 22, r: -9 },
-  { x: 74, y: 58, mobileY: 28, r: 8 },
-  { x: 26, y: 44, mobileY: 23, r: -7 },
+  { x: 70, y: 56, mobileY: 35, r: 5 },
+  { x: 27, y: 60, mobileY: 37, r: -9 },
+  { x: 74, y: 58, mobileY: 36, r: 8 },
+  { x: 26, y: 61, mobileY: 38, r: -7 },
 ];
 
 let currentScene = -1;
@@ -51,7 +52,7 @@ function updateScene() {
 
   const isCompact = innerWidth <= 780;
   const renderedY = isCompact
-    ? mix(from.mobileY, to.mobileY, segmentProgress) - lift * 0.68 + bob * 0.55
+    ? mix(from.mobileY, to.mobileY, segmentProgress) - lift * 0.68 + bob * 0.55 + mobilePerformerDrop
     : baseY + lift + bob;
 
   performer.style.setProperty('--performer-x', `${x}vw`);
