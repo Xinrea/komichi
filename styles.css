@@ -285,6 +285,19 @@ a { color: inherit; }
   transition: left .12s linear;
 }
 
+.road-sign-prop {
+  position: absolute;
+  z-index: 34;
+  top: 8vh;
+  right: -8vw;
+  width: clamp(360px, 44vw, 560px);
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(8px 12px 8px rgba(24, 7, 5, .3));
+  transform: rotate(.8deg);
+  transform-origin: 42% 20%;
+}
+
 .curtain-art {
   position: absolute;
   z-index: 32;
@@ -361,6 +374,12 @@ a { color: inherit; }
     transform: translate(-50%,-50%) rotate(var(--performer-r)) scale(.62);
   }
   .performer-label { display: none; }
+  .road-sign-prop {
+    top: 18vh;
+    right: -18vw;
+    width: 64vw;
+    filter: drop-shadow(5px 8px 6px rgba(24, 7, 5, .28));
+  }
   .mini-facts { width: 86%; margin-top: 18px; }
   .mini-facts div { padding: 8px 0; }
   .work-list { width: 92%; margin-top: 16px; }
