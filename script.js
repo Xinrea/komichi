@@ -8,11 +8,8 @@ const performerImage = performer.querySelector('img');
 const sceneSections = [...document.querySelectorAll('.scroll-track section')];
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const mobilePerformerDrop = 12;
-const REALM_SWAP_CHANCE = 0.45;
 const GLITCH_MIN_MS = 4200;
 const GLITCH_MAX_MS = 6800;
-const REALM_LOCK_MIN_MS = 2200;
-const REALM_LOCK_MAX_MS = 4000;
 
 const scenes = [
   { x: 70, y: 56, mobileY: 35, r: 5 },
@@ -30,8 +27,6 @@ let snapUnlockTimer;
 let snapLockUntil = 0;
 let glitchTimer;
 let glitchClearTimer;
-let realmLockedUntil = 0;
-let isNight = false;
 
 function mix(a, b, t) {
   return a + (b - a) * t;
@@ -45,13 +40,6 @@ function randBetween(min, max) {
   return min + Math.random() * (max - min);
 }
 
-function setRealm(night) {
-  isNight = night;
-  theater.classList.toggle('is-night', night);
-  theater.dataset.realm = night ? 'night' : 'day';
-  document.documentElement.style.colorScheme = night ? 'dark' : 'light';
-}
-
 function triggerGlitch() {
   if (reduceMotion.matches) return;
 
@@ -60,19 +48,8 @@ function triggerGlitch() {
   // Force reflow so repeated glitch bursts retrigger CSS animations.
   void theater.offsetWidth;
 
-  const canSwap = performance.now() >= realmLockedUntil;
-  const willSwap = canSwap && Math.random() < REALM_SWAP_CHANCE;
-
   theater.classList.add('is-glitching');
   crtOverlay?.classList.add('is-glitching');
-
-  if (willSwap) {
-    // Cut during the tear so the realm change feels like signal loss.
-    setTimeout(() => {
-      setRealm(!isNight);
-      realmLockedUntil = performance.now() + randBetween(REALM_LOCK_MIN_MS, REALM_LOCK_MAX_MS);
-    }, 90);
-  }
 
   clearTimeout(glitchClearTimer);
   glitchClearTimer = setTimeout(() => {
@@ -206,7 +183,6 @@ reduceMotion.addEventListener('change', () => {
     clearTimeout(glitchClearTimer);
     theater.classList.remove('is-glitching');
     crtOverlay?.classList.remove('is-glitching');
-    setRealm(false);
   } else {
     scheduleGlitch();
   }
