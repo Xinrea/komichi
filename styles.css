@@ -118,7 +118,10 @@ a { color: inherit; }
   position: absolute;
   inset: 0;
   opacity: 0;
-  animation: crtGlitchBurst 5.2s steps(1, end) infinite;
+  pointer-events: none;
+}
+.crt-overlay.is-glitching .crt-glitch {
+  animation: crtGlitchBurst .42s steps(1, end) 1;
 }
 .crt-glitch::before,
 .crt-glitch::after {
@@ -136,7 +139,9 @@ a { color: inherit; }
     linear-gradient(90deg, transparent 0 8%, rgba(255, 40, 40, .55) 8% 12%, transparent 12% 40%, rgba(40, 160, 255, .45) 40% 48%, transparent 48%),
     repeating-linear-gradient(90deg, rgba(255,255,255,.12) 0 2px, transparent 2px 5px);
   box-shadow: 0 0 0 1px rgba(255, 60, 40, .2);
-  animation: crtSliceA 5.2s steps(1, end) infinite;
+}
+.crt-overlay.is-glitching .crt-glitch::before {
+  animation: crtSliceA .42s steps(1, end) 1;
 }
 .crt-glitch::after {
   top: 61%;
@@ -144,7 +149,9 @@ a { color: inherit; }
   background:
     linear-gradient(90deg, transparent 0 55%, rgba(40, 180, 255, .5) 55% 62%, transparent 62% 78%, rgba(255, 50, 40, .45) 78% 84%, transparent 84%),
     repeating-linear-gradient(90deg, rgba(255,255,255,.1) 0 1px, transparent 1px 4px);
-  animation: crtSliceB 5.2s steps(1, end) infinite;
+}
+.crt-overlay.is-glitching .crt-glitch::after {
+  animation: crtSliceB .42s steps(1, end) 1;
 }
 .crt-vignette {
   position: absolute;
@@ -174,57 +181,37 @@ a { color: inherit; }
   50% { opacity: 1; }
 }
 @keyframes crtGlitchBurst {
-  0%, 86%, 100% { opacity: 0; }
-  87%, 89% { opacity: 1; }
-  88% { opacity: .4; }
-  90% { opacity: 0; }
-  93% { opacity: 1; }
-  94% { opacity: 0; }
+  0%, 12% { opacity: 1; }
+  20% { opacity: .35; }
+  35%, 55% { opacity: 1; }
+  60%, 100% { opacity: 0; }
 }
 @keyframes crtSliceA {
-  0%, 86%, 100% { opacity: 0; transform: translate(0, 0) skewX(0); }
-  87% { opacity: 1; transform: translate(-18px, -2px) skewX(-8deg); }
-  88% { opacity: .85; transform: translate(22px, 1px) skewX(6deg); }
-  89% { opacity: 1; transform: translate(-8px, 0) skewX(-3deg); }
-  90%, 92% { opacity: 0; transform: translate(0, 0); }
-  93% { opacity: .9; transform: translate(14px, 3px) skewX(5deg); }
-  94% { opacity: 0; transform: translate(0, 0); }
+  0% { opacity: 1; transform: translate(-18px, -2px) skewX(-8deg); }
+  25% { opacity: .85; transform: translate(22px, 1px) skewX(6deg); }
+  45% { opacity: 1; transform: translate(-8px, 0) skewX(-3deg); }
+  55%, 100% { opacity: 0; transform: translate(0, 0); }
 }
 @keyframes crtSliceB {
-  0%, 86%, 100% { opacity: 0; transform: translate(0, 0) skewX(0); }
-  87% { opacity: .9; transform: translate(16px, 1px) skewX(7deg); }
-  88% { opacity: 1; transform: translate(-24px, -1px) skewX(-5deg); }
-  89% { opacity: .7; transform: translate(10px, 0) skewX(4deg); }
-  90%, 92% { opacity: 0; transform: translate(0, 0); }
-  93% { opacity: 1; transform: translate(-12px, -2px) skewX(-6deg); }
-  94% { opacity: 0; transform: translate(0, 0); }
+  0% { opacity: .9; transform: translate(16px, 1px) skewX(7deg); }
+  25% { opacity: 1; transform: translate(-24px, -1px) skewX(-5deg); }
+  45% { opacity: .7; transform: translate(10px, 0) skewX(4deg); }
+  55%, 100% { opacity: 0; transform: translate(0, 0); }
 }
 @keyframes theaterGlitch {
-  0%, 86%, 100% {
-    filter: none;
-    transform: none;
-  }
-  87% {
+  0% {
     filter: contrast(1.2) saturate(1.25) hue-rotate(12deg);
     transform: translate(3px, -1px) skewX(.6deg);
   }
-  88% {
+  30% {
     filter: contrast(1.35) saturate(1.4) hue-rotate(-14deg);
     transform: translate(-4px, 2px) skewX(-.8deg);
   }
-  89% {
+  55% {
     filter: contrast(1.15) hue-rotate(6deg);
     transform: translate(2px, 0) skewX(.4deg);
   }
-  90%, 92% {
-    filter: none;
-    transform: none;
-  }
-  93% {
-    filter: contrast(1.25) saturate(1.3) hue-rotate(-8deg);
-    transform: translate(-3px, 1px) skewX(-.5deg);
-  }
-  94% {
+  70%, 100% {
     filter: none;
     transform: none;
   }
@@ -267,7 +254,157 @@ a { color: inherit; }
   overflow: hidden;
   background: var(--paper);
   isolation: isolate;
-  animation: theaterGlitch 5.2s steps(1, end) infinite;
+  transition: background-color .15s linear, color .15s linear;
+}
+.theater.is-glitching {
+  animation: theaterGlitch .42s steps(2, end) 1;
+}
+.backdrop-night {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  background: #05060a;
+  transition: opacity .12s linear, visibility .12s linear;
+}
+.night-crossroads {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+}
+.night-fog {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 40% at 50% 78%, rgba(140, 150, 165, .14), transparent 70%),
+    linear-gradient(180deg, transparent 40%, rgba(8, 10, 16, .35) 100%);
+  animation: nightFogDrift 11s ease-in-out infinite alternate;
+}
+.night-red-wash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 45% at 30% 42%, rgba(255, 30, 30, .12), transparent 65%);
+  animation: nightRedPulse 3.4s ease-in-out infinite;
+}
+@keyframes nightFogDrift {
+  0% { opacity: .85; transform: translateX(-1.5%) scale(1); }
+  100% { opacity: 1; transform: translateX(1.5%) scale(1.03); }
+}
+@keyframes nightRedPulse {
+  0%, 100% { opacity: .7; }
+  50% { opacity: 1; }
+}
+
+/* Night realm — empty 4AM crossroads, no curtain */
+.theater.is-night {
+  background: #05060a !important;
+  color: #e8e2d4;
+}
+.theater.is-night .backdrop {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+.theater.is-night .backdrop-night {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.theater.is-night .curtain-art {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+.theater.is-night .spotlight {
+  opacity: 0;
+  visibility: hidden;
+}
+.theater.is-night .puppet-stick {
+  opacity: .25;
+  filter: brightness(.4);
+}
+.theater.is-night .performer img {
+  filter: drop-shadow(0 0 18px rgba(255, 40, 40, .35)) brightness(.82) contrast(1.08) saturate(.9);
+}
+.theater.is-night .paper-shadow {
+  bottom: -8%;
+  background: rgba(255, 30, 30, .22);
+}
+.theater.is-night .road-sign-prop {
+  top: 28vh;
+  filter: drop-shadow(0 0 16px rgba(255, 40, 40, .25)) brightness(.55) saturate(.7);
+  opacity: .55;
+}
+.theater.is-night .story-card h1 em,
+.theater.is-night .dream-card h2 em {
+  color: #ff3a3a;
+}
+.theater.is-night .entrance-line {
+  border-left-color: #ff3a3a;
+  color: #d8d0c0;
+}
+.theater.is-night .bilibili-link {
+  background: #1a0508;
+  border-color: #e8e2d4;
+  box-shadow: 4px 4px 0 #5a1010;
+  color: #f0dfbd;
+}
+.theater.is-night .profile-facts,
+.theater.is-night .favorite-strip,
+.theater.is-night .recent-music {
+  border-color: rgba(232, 226, 212, .28);
+}
+.theater.is-night .profile-facts div,
+.theater.is-night .setting-grid li {
+  border-color: rgba(232, 226, 212, .22);
+  background: rgba(12, 14, 20, .45);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, .35);
+}
+.theater.is-night .setting-grid .weapon-item {
+  background: #1a0508;
+  border-color: #e8e2d4;
+  color: #f0dfbd;
+}
+.theater.is-night .artist-cloud span {
+  border-color: rgba(232, 226, 212, .28);
+  background: rgba(12, 14, 20, .5);
+}
+.theater.is-night .tag-link,
+.theater.is-night .recent-music strong,
+.theater.is-night .support-color {
+  color: #ff5a5a;
+}
+.theater.is-night .stage-counter {
+  color: #ff5a5a;
+}
+.theater.is-night .dream-card h2,
+.theater.is-night .dream-card .eyebrow,
+.theater.is-night .dream-card .music-block {
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, .9),
+    0 4px 18px rgba(0, 0, 0, .75),
+    0 0 28px rgba(0, 0, 0, .55);
+}
+.theater.is-night .dream-card .music-block {
+  padding: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+.theater.is-night .dream-card .music-block small {
+  color: rgba(255, 196, 196, .72);
+  opacity: 1;
+}
+.theater.is-night .dream-card .artist-cloud span {
+  background: transparent;
+  border-color: rgba(232, 226, 212, .38);
+  box-shadow: none;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, .85);
+}
+.theater.is-night .dream-card .recent-music {
+  border-top-color: rgba(255, 90, 90, .35);
 }
 .backdrop {
   position: absolute; inset: 0; z-index: -3;
@@ -464,7 +601,18 @@ a { color: inherit; }
   transform: scale(1.2);
   filter: drop-shadow(8px 12px 0 rgba(22,12,8,.28));
 }
-.paper-shadow { position: absolute; width: 65%; height: 9%; left: 18%; bottom: 6%; background: rgba(39,19,10,.26); filter: blur(14px); border-radius: 50%; transform: rotate(-5deg); }
+.paper-shadow {
+  position: absolute;
+  z-index: 1;
+  width: 58%;
+  height: 7%;
+  left: 21%;
+  bottom: -8%;
+  background: rgba(39,19,10,.26);
+  filter: blur(14px);
+  border-radius: 50%;
+  transform: rotate(-5deg);
+}
 .performer-label { position: absolute; right: 2%; top: 34%; z-index: 4; font: 8px "DM Mono", monospace; letter-spacing: .15em; color: #e7d4af; background: var(--red-dark); border: 1px solid var(--ink); padding: 6px 9px; transform: rotate(5deg); }
 .puppet-stick {
   position: absolute; z-index: 1; width: 13px; height: 66vh; left: 48%; top: 70%;
@@ -482,8 +630,8 @@ a { color: inherit; }
 
 .road-sign-prop {
   position: absolute;
-  z-index: 34;
-  top: 8vh;
+  z-index: 8;
+  top: 26vh;
   right: -8vw;
   width: clamp(360px, 44vw, 560px);
   pointer-events: none;
@@ -505,6 +653,7 @@ a { color: inherit; }
   pointer-events: none;
   user-select: none;
   filter: saturate(.82) contrast(1.08) brightness(.82) drop-shadow(0 12px 10px rgba(24, 3, 4, .35));
+  transition: opacity .12s linear, visibility .12s linear;
 }
 .stage-counter { position: absolute; left: 50%; bottom: 3.2vh; z-index: 40; transform: translateX(-50%); color: var(--red-dark); display: flex; align-items: baseline; gap: 6px; font-family: "DM Mono", monospace; }
 .stage-counter span { font-size: 16px; }.stage-counter b { font-weight: 400; opacity: .45; }.stage-counter small { font-size: 9px; opacity: .55; }
@@ -570,10 +719,13 @@ a { color: inherit; }
   }
   .performer-label { display: none; }
   .road-sign-prop {
-    top: 18vh;
+    top: 30vh;
     right: -18vw;
     width: 64vw;
     filter: drop-shadow(5px 8px 6px rgba(24, 7, 5, .28));
+  }
+  .theater.is-night .road-sign-prop {
+    top: 36vh;
   }
   .mini-facts { width: 86%; margin-top: 18px; }
   .mini-facts div { padding: 8px 0; }
@@ -592,7 +744,9 @@ a { color: inherit; }
   .crt-glitch,
   .crt-glitch::before,
   .crt-glitch::after,
-  .theater {
+  .theater,
+  .night-fog,
+  .night-red-wash {
     animation: none !important;
   }
   .crt-scanlines::after { opacity: 0; }

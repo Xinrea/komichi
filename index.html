@@ -67,7 +67,7 @@
         }
       }
     </script>
-    <link rel="stylesheet" href="./styles.css?v=8" />
+    <link rel="stylesheet" href="./styles.css?v=15" />
   </head>
   <body>
     <div class="page-grain" aria-hidden="true"></div>
@@ -93,10 +93,20 @@
     </header>
 
     <main>
-      <div class="theater" aria-label="纸片剧场舞台">
+      <div class="theater" aria-label="纸片剧场舞台" data-realm="day">
         <div class="backdrop" aria-hidden="true">
           <div class="backdrop-halo"></div>
           <div class="floor-lines"></div>
+        </div>
+        <div class="backdrop-night" aria-hidden="true">
+          <img
+            class="night-crossroads"
+            src="./assets/night-crossroads.png?v=1"
+            alt=""
+            draggable="false"
+          />
+          <div class="night-fog"></div>
+          <div class="night-red-wash"></div>
         </div>
 
         <div class="scene-copy" aria-live="polite">
@@ -199,6 +209,6 @@
     </main>
 
     <noscript>请启用 JavaScript 观看纸片剧场的滚动演出。</noscript>
-    <script src="./script.js?v=3"></script>
+    <script src="./script.js?v=4"></script>
   </body>
 </html>
