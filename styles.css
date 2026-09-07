@@ -40,7 +40,7 @@ a { color: inherit; }
 .crt-overlay {
   position: fixed;
   inset: 0;
-  z-index: 110;
+  z-index: 130;
   pointer-events: none;
   overflow: hidden;
   animation: crtFlicker 3.6s steps(2, end) infinite;

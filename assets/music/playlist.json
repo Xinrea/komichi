@@ -1,0 +1,36 @@
+{
+  "tracks": [
+    {
+      "title": "大女優さん",
+      "artist": "四时小路Komichi",
+      "audio": "daijoyuu-san.mp3",
+      "lyrics": "daijoyuu-san.json",
+      "offset": 0,
+      "originalArtist": "花隈千冬",
+      "lyricist": "いよわ",
+      "composer": "いよわ",
+      "arranger": "いよわ"
+    },
+    {
+      "title": "天国",
+      "artist": "四时小路Komichi",
+      "audio": "tengoku.mp3",
+      "lyrics": "tengoku.json",
+      "offset": 0,
+      "originalArtist": "初音ミク",
+      "lyricist": "ひらぎ",
+      "composer": "ひらぎ"
+    },
+    {
+      "title": "CHO-DARI-",
+      "artist": "四时小路Komichi",
+      "audio": "cho-dari.mp3",
+      "lyrics": "cho-dari.json",
+      "offset": 1,
+      "originalArtist": "初音ミク",
+      "lyricist": "23.exe",
+      "composer": "23.exe",
+      "arranger": "23.exe"
+    }
+  ]
+}

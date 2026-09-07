@@ -1,0 +1,52 @@
+{
+  "project": "folia-light",
+  "target": "web",
+  "baseRevision": "2b6a160e892d09056064363f7dec32923ce780d4",
+  "compiler": "emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 4.0.14 (96371ed7888fc78c040179f4d4faa82a6a07a116)",
+  "sourceDigest": "2b79bf63a972b571425437dcb5754e5de76c8eeed5861e7de6ca54763cd78560",
+  "sources": {
+    "include/folia/audio.hpp": "247ebc18498ad1eec9a978926b8e5ec3ae779518c13e3fa39ca05cbb4ad4f9cf",
+    "include/folia/browser.hpp": "482b092f701c6422e716cd41d5ffe61f2d483b4f08fc8d7d18dac524d7015f8a",
+    "include/folia/diagnostics.hpp": "6904f98a97fd2b4da22c5916c8b1df41e884454a135a688f105cefc148d352a2",
+    "include/folia/lyrics.hpp": "07050c708e29f0687cb7489ab66deffcbf96756914ff8cd2532fe6f86ded3d30",
+    "include/folia/manifest.hpp": "e3a35d3850cb571b1e2acfa3359f6723f659fd2f2458599a973a67f6c7b9411b",
+    "include/folia/package.hpp": "67b599fdda553cb60837e81e82a705147cac0ace9f7840c75aa2c6541258baa4",
+    "include/folia/player.hpp": "3908995b2222edc8aebf9b5c9cf386c2982eeb37ae0b40b1558aaa070098a004",
+    "include/folia/selftest.hpp": "cb679d5ac1a94d116caea7e0b68b104713fbe0570eecf21e794e5cdf901a2f53",
+    "include/folia/signals.hpp": "305a09b2f27d0b5b81f5803424913c74598714ba75ef69a386e59f188b925ca3",
+    "include/folia/text.hpp": "23adb3a6c72b52ba991881353ca82565418bcc1d52ff01ad261eedfc1396c4ad",
+    "include/folia/theme.hpp": "3b1dbd498f5e93641e89086a6b61b91a954adce62653c5d8dcea2d0d1e51bbfb",
+    "scripts/build-web.sh": "a0fcc5a5d119270f6e5afe12d1f1e3702c1a6c7106cc51b3f88d511e06a2f450",
+    "scripts/package-web.py": "a5d70bbb1bb363deddb5ce57aee576bb419e62e112b9097bf7d879a54f485a9b",
+    "src/diagnostics.cpp": "96e79e82c623e8646238f2e78999cef30acb49f120b294b7ca65856a88aec76d",
+    "src/lyrics.cpp": "7b737506e052e849be3883b88de955460754c7eedb625749d1f86e561ee46579",
+    "src/player.cpp": "5ee4039791f9e9721a48d7279623441f896dc40480416c9add6786ac51c1c698",
+    "src/signals.cpp": "cf792000d6f6bc064581e2092d456458ac50a0cf0adfb20b748c163b8ffc132e",
+    "src/text.cpp": "be6c8255f72ce9d767e5c1d8df17c5c2faaeb361af3f805b5dc984457dbad8c2",
+    "src/theme.cpp": "dd615b140a568e1782e805b68ed5f64e93c8da42cd66f68616c56d17ff917cdb",
+    "web/CMakeLists.txt": "f26c366a4229fc20a3f9a422e46c2ea0eab94b266b50f6b1e6432a92bf5e8a7f",
+    "web/extract_renderer.py": "5d5564faa127de6bced03ac809288949b7da7a85fe08c57a8b28a51aa3cd780b",
+    "web/theme-context.hpp": "da433fc4741471fdc490a8772fe7aeaa5cc39cffdaf7c132cf1adf6869949306",
+    "web/themes/index.json": "cce84039b7136d150934c835647e30a46652e091a92795ace8c429f4ca3815df",
+    "web/themes/midnight/background.fs": "8c7dc42de6cd6586b70354a16f6256062204c840be61ed4e9585818895087d43",
+    "web/themes/midnight/post.fs": "b5e66517487df18fe65d3fc47f8e5db32e98277ae6ebe52858fe2f5b173d089f",
+    "web/themes/midnight/scene.json": "3713b002abf3b923a563d009b31ecb4a2a46abf042d6dd32424ca5de1e87bb95",
+    "web/themes/midnight/theme.json": "0f6e5d078c75b0885b6ecfb8a2837c91e86d076020c1259572f1c3547c827be2",
+    "web/themes/minimal/scene.json": "3c3489023fd2a031ed776a485f44c0d7b3f76b10ad94bdb6cc601f3e5b2f8fd1",
+    "web/themes/minimal/theme.json": "4a300f64b5cca6795843768d87a63b50cc371f590874fb191fec28814aaa9dc6",
+    "web/themes/neon/background.fs": "2f43a7c06486b761ed0225086b436a72e4303e930260d048a8e7cb837807149a",
+    "web/themes/neon/post.fs": "e4fc120919a493cb1d00fec6de43e46c654e3b68c3b341362c3231ccb143dce9",
+    "web/themes/neon/scene.json": "9e3ab13659e0b92a0f5e20d58ab0ff2d8be35358f4b1f29b55c860d65be03d42",
+    "web/themes/neon/theme.json": "4a33a5b20bfd45b1b47f470cc6248795800538d732667a09befe90d1bef5dce5",
+    "web/web.cpp": "3b47138373258243209925668cf7f69b7ff4cb01c1607b3707d9d3d834e16061"
+  },
+  "outputs": {
+    "folia.js": "797bb171a90719b1d60f30a2611cd470fac807fbf9b3a3d15b95f84fc9082c6b",
+    "folia.wasm": "23a880386e3e702cde662d13a153c82b9cd8978856d39a04e79f4894cf398a66"
+  },
+  "embeddedThemes": [
+    "komichi.minimal",
+    "komichi.neon",
+    "komichi.midnight"
+  ]
+}

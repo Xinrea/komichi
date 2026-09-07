@@ -140,6 +140,7 @@ function goToScene(index) {
 
 function handleWheel(event) {
   if (event.ctrlKey) return;
+  if (event.target.closest?.('.music-player')) return;
   event.preventDefault();
   if (snapLocked) {
     clearTimeout(snapUnlockTimer);
@@ -164,7 +165,7 @@ function handleKeys(event) {
   const backwardKeys = ['ArrowUp', 'PageUp'];
   const isSpace = event.code === 'Space';
   if (![...forwardKeys, ...backwardKeys].includes(event.key) && !isSpace) return;
-  if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) return;
+  if (event.target.closest?.('input, textarea, select, button, summary, a, [contenteditable]')) return;
 
   event.preventDefault();
   if (snapLocked) return;
