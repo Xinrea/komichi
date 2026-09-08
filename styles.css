@@ -537,23 +537,25 @@ a { color: inherit; }
 }
 
 @media (max-width: 780px) {
+  /* The fixed player occupies three rows on phones; keep scene copy above it. */
+  :root { --mobile-player-clearance: 154px; }
   .site-header { height: 60px; padding-inline: 14px; }
   .brand-copy, .show-status { display: none; }
   .brand-mark { width: 31px; height: 31px; font-size: 18px; }
   .chapter-nav { margin-left: auto; }
   .scene-copy { z-index: 14; }
-  .story-card { width: calc(100vw - 68px); top: auto; bottom: 17vh; }
+  .story-card { width: calc(100vw - 68px); top: auto; bottom: max(var(--mobile-player-clearance), calc(17vh + 72px)); }
   .story-card.is-active { transform: translateY(0); }
   .left-card, .intro-card, .right-card { left: 34px; right: auto; }
   .story-card h1, .story-card h2 { font-size: clamp(46px, 15vw, 72px); }
   .story-card .lead, .story-card > p:not(.eyebrow):not(.social-links) { max-width: 88%; font-size: 12px; line-height: 1.7; margin-block: 15px; }
-  .intro-card { bottom: 18vh; }
+  .intro-card { bottom: max(var(--mobile-player-clearance), calc(18vh + 72px)); }
   .intro-card h1 { font-size: clamp(50px, 17vw, 78px); }
   .intro-card h1 em { font-size: .5em; }
   .entrance-line { max-width: 90%; font-size: 10px; }
   .bilibili-link { width: 88%; margin-top: 12px; padding: 8px 10px; }
   .bilibili-link strong { font-size: 8px; }
-  .profile-card, .setting-card, .dream-card { width: calc(100vw - 68px); bottom: 14vh; }
+  .profile-card, .setting-card, .dream-card { width: calc(100vw - 68px); bottom: max(var(--mobile-player-clearance), calc(14vh + 72px)); }
   .profile-card h2, .setting-card h2, .dream-card h2 { font-size: clamp(42px, 12vw, 60px); }
   .identity-line { margin-block: 9px 12px !important; }
   .profile-facts { column-gap: 13px; }

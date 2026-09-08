@@ -14,14 +14,14 @@ const atmosphere = canvas.parentElement;
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 const assetBase = new URL('./assets/folia/', import.meta.url);
 const playlistURL = new URL('./assets/music/playlist.json', import.meta.url);
-const themeIds = ['minimal', 'neon', 'midnight'];
-const sceneNames = ['朱砂排印', '绯红霓虹', '午夜电文'];
+const themeIds = ['neon', 'midnight'];
+const sceneNames = ['绯红霓虹', '午夜电文'];
 const songScenes = new WeakMap();
 let sceneBag = [];
 function sceneFor(track) {
   if (!songScenes.has(track)) {
     if (!sceneBag.length) {
-      sceneBag = [0, 1, 2];
+      sceneBag = [0, 1];
       for (let i = sceneBag.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [sceneBag[i], sceneBag[j]] = [sceneBag[j], sceneBag[i]];
@@ -51,6 +51,7 @@ let currentTitle = '';
 let tracks = [];
 let renderWidth = 1;
 let renderHeight = 1;
+let pendingSeek = null;
 
 function clock(seconds) {
   const value = Number.isFinite(seconds) ? Math.max(0, seconds) : 0;
@@ -74,13 +75,15 @@ function updateFocus() {
 }
 function updateTransport() {
   const duration = Number.isFinite(audio.duration) ? audio.duration : 0;
-  seek.max = duration || 1;
-  seek.value = audio.currentTime || 0;
+  const max = String(duration || 1);
+  if (seek.max !== max) seek.max = max;
+  const currentTime = pendingSeek ?? (audio.currentTime || 0);
+  seek.value = currentTime;
   seek.disabled = duration <= 0;
-  seek.style.setProperty('--progress', `${duration ? audio.currentTime / duration * 100 : 0}%`);
-  seek.setAttribute('aria-valuetext', `${clock(audio.currentTime)} / ${clock(duration)}`);
-  timeLabel.value = `${clock(audio.currentTime)} / ${clock(duration)}`;
-  $('elapsed-time').textContent = clock(audio.currentTime);
+  seek.style.setProperty('--progress', `${duration ? currentTime / duration * 100 : 0}%`);
+  seek.setAttribute('aria-valuetext', `${clock(currentTime)} / ${clock(duration)}`);
+  timeLabel.value = `${clock(currentTime)} / ${clock(duration)}`;
+  $('elapsed-time').textContent = clock(currentTime);
   $('duration-time').textContent = clock(duration);
   const playing = !audio.paused && !audio.ended;
   player.classList.toggle('is-playing', playing);
@@ -320,6 +323,7 @@ function selectTrack(index, autoplay = false, recordHistory = true) {
   ++selection;
   abortLoad?.abort();
   abortLoad = new AbortController();
+  pendingSeek = null;
   audio.pause();
   hideLyrics();
   offset = Number.isFinite(track.offset) ? track.offset : 0;
@@ -391,9 +395,14 @@ document.addEventListener('pointerdown', (event) => {
   if (!player.contains(event.target)) toggleList(false);
 });
 seek.addEventListener('input', () => {
-  if (Number.isFinite(audio.duration)) audio.currentTime = Math.min(audio.duration, Number(seek.value));
+  if (Number.isFinite(audio.duration)) {
+    pendingSeek = Math.max(0, Math.min(audio.duration, Number(seek.value)));
+    audio.currentTime = pendingSeek;
+  }
   ensureLyrics();
-  refresh();
+  // Chrome may dispatch timeupdate before the asynchronous seek settles.
+  // Keep the thumb at the user's target until the media element emits seeked.
+  updateTransport();
 });
 const volume = $('music-volume');
 const mute = $('music-mute');
@@ -442,7 +451,11 @@ effects.addEventListener('click', () => {
   refresh();
 });
 
-for (const event of ['play', 'pause', 'seeking', 'seeked', 'ended', 'ratechange', 'loadeddata']) audio.addEventListener(event, refresh);
+for (const event of ['play', 'pause', 'seeking', 'ended', 'ratechange', 'loadeddata']) audio.addEventListener(event, refresh);
+audio.addEventListener('seeked', () => {
+  pendingSeek = null;
+  refresh();
+});
 audio.addEventListener('timeupdate', updateTransport);
 audio.addEventListener('loadedmetadata', () => { if (audio.getAttribute('src')) updateTransport(); });
 audio.addEventListener('error', () => {
