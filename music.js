@@ -32,6 +32,16 @@ function sceneFor(track) {
   return songScenes.get(track);
 }
 const MAX_LYRIC_BYTES = 2 * 1024 * 1024;
+const pageTitle = document.title;
+
+function pinPageTitle() {
+  Object.defineProperty(document, 'title', {
+    configurable: true,
+    enumerable: true,
+    get: () => pageTitle,
+    set() {},
+  });
+}
 
 let engine;
 let enginePromise;
@@ -187,6 +197,7 @@ function loadEngine() {
       import('./assets/folia/folia.js'),
       fetchBytes(new URL('cjk.otf', assetBase)),
     ]);
+    pinPageTitle();
     const module = await createFolia({
       canvas,
       locateFile: (file) => new URL(file, assetBase).href,

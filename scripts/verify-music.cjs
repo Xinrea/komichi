@@ -40,6 +40,8 @@ function silentWav(seconds = 15) {
     await page.route('**/assets/music/playlist.json', route => route.fulfill({json:{tracks:[library.tracks[0]]}}));
     await page.goto(origin);
     await page.waitForFunction(()=>!document.querySelector('#music-play').disabled);
+    const pageTitle = await page.title();
+    assert.equal(pageTitle, '四时小路Komichi｜都市传说系虚拟主播个人主页');
     assert.equal(await page.locator('input[type="file"], #lyric-source, .radio-imports').count(), 0);
     await page.locator('#music-list').click();
     assert((await page.locator('#credits-list').innerText()).includes('花隈千冬'));
@@ -73,6 +75,7 @@ function silentWav(seconds = 15) {
     const initialScene = await page.locator('.lyric-atmosphere').evaluate(el => ({ ...el.dataset }));
     await page.locator('#music-play').click();
     await page.waitForFunction(() => document.querySelector('#lyric-status').textContent.includes('就绪'), null, { timeout: 60000 });
+    assert.equal(await page.title(), pageTitle, 'Lyrics mode must keep the original document title');
     assert(requests.some((url)=>url.endsWith('folia.wasm')));
     await page.locator('#music-play').click();
     const at = await page.locator('#music-audio').evaluate(el=>el.currentTime);
@@ -86,6 +89,7 @@ function silentWav(seconds = 15) {
       await seekTo(time);
       await page.waitForFunction(text=>document.querySelector('#current-lyric').textContent===text,text);
     }
+    assert.equal(await page.title(), pageTitle, 'Lyric line changes must not rewrite the document title');
     await seekTo(58);
     await page.waitForTimeout(800);
     const canvasRect = await page.locator('#folia-canvas').boundingBox();
