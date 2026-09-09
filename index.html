@@ -68,7 +68,7 @@
       }
     </script>
     <link rel="stylesheet" href="./styles.css?v=18" />
-    <link rel="stylesheet" href="./music.css?v=7" />
+    <link rel="stylesheet" href="./music.css?v=12" />
   </head>
   <body>
     <div class="page-grain" aria-hidden="true"></div>
@@ -210,7 +210,7 @@
         <p id="lyric-status" role="status"></p>
       </div>
       <div class="player-bar">
-        <div class="track-identity"><div class="track-cover" aria-hidden="true"><img src="./assets/character-cutout.png?v=4" alt=""/><span>04</span></div><div class="track-info"><small>深夜电台 <i></i></small><strong id="track-title">正在载入播放列表</strong><span id="track-artist">KOMICHI · AFTER HOURS</span></div></div>
+        <div class="track-identity"><a class="track-cover" id="track-cover-link"><img id="track-cover-image" src="./assets/character-cutout.png?v=4" alt=""/></a><div class="track-info"><small>深夜电台 <i></i> <a id="track-bilibili" class="track-bilibili" target="_blank" rel="noopener noreferrer" hidden><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.51.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.92.4.267.249.373.551.373.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.556 1.88.574h13.334c.746-.018 1.373-.277 1.88-.574.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.555-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.354.551.354.907v1.427c0 .355-.104.658-.354.907-.249.249-.56.373-.933.373s-.684-.124-.933-.373c-.25-.249-.354-.551-.354-.907v-1.427c0-.356.104-.658.354-.907.249-.249.56-.373.933-.373zm8 0c.373 0 .684.124.933.373.25.249.354.551.354.907v1.427c0 .355-.104.658-.354.907-.249.249-.56.373-.933.373s-.684-.124-.933-.373c-.25-.249-.354-.551-.354-.907v-1.427c0-.356.104-.658.354-.907.249-.249.56-.373.933-.373z"/></svg></a></small><strong id="track-title">正在载入播放列表</strong><span id="track-artist">KOMICHI · AFTER HOURS</span></div></div>
         <div class="transport-main">
           <div class="transport-buttons"><button id="music-prev" class="icon-button" aria-label="上一首" title="上一首"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5v14M19 5 8 12l11 7Z"/></svg></button><button id="music-play" class="play-button" disabled aria-label="播放" title="播放"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5 20 12 8 19Z" fill="currentColor" stroke="none"/></svg></button><button id="music-next" class="icon-button" aria-label="下一首" title="下一首"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5v14M5 5l11 7-11 7Z"/></svg></button></div>
           <div class="seek-row"><span id="elapsed-time">0:00</span><label class="sr-only" for="music-seek">播放进度</label><input id="music-seek" type="range" min="0" max="1" step="0.1" value="0" disabled /><span id="duration-time">0:00</span></div>
@@ -224,6 +224,6 @@
     <audio id="music-audio" preload="metadata"></audio>
     <noscript>请启用 JavaScript 观看纸片剧场的滚动演出。</noscript>
     <script src="./script.js?v=6"></script>
-    <script type="module" src="./music.js?v=10"></script>
+    <script type="module" src="./music.js?v=16"></script>
   </body>
 </html>

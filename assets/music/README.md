@@ -14,6 +14,8 @@
     "arranger": "编曲（已确认时填写）",
     "audio": "my-song.mp3",
     "lyrics": "my-song.json",
+    "cover": "covers/my-song.jpg",
+    "bvid": "BV1xxxxxxxx",
     "offset": 0
   }]
 }
@@ -21,7 +23,7 @@
 
 `artist` 是本站播放版本的演唱者，`originalArtist` 是原唱。播放列表显示翻唱和原唱，当前歌曲信息区显示已提供的词曲、编曲信息；未知字段省略。页面不展示歌词来源，来源记录保留在维护用的 `.source.md` 中。
 
-路径相对 `playlist.json`。`audio` 必填，`lyrics` 可省略；缺少歌词不影响音频播放。`offset` 单位为秒，正数让歌词提前，负数延后；《CHO-DARI-》按用户试听反馈设为 `1`。
+路径相对 `playlist.json`。`audio` 必填，`lyrics` 可省略；缺少歌词不影响音频播放。`cover` 是播放栏封面，`bvid` 用来生成哔哩哔哩视频链接（封面与 B 站 logo 都会打开该视频）。`offset` 单位为秒，正数让歌词提前，负数延后；《CHO-DARI-》按用户试听反馈设为 `1`。
 
 页面不会自动播放。列表循环、单曲循环和随机播放均支持手动切歌；音量和静音状态保存在浏览器本机。
 

@@ -14,6 +14,7 @@ const atmosphere = canvas.parentElement;
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 const assetBase = new URL('./assets/folia/', import.meta.url);
 const playlistURL = new URL('./assets/music/playlist.json', import.meta.url);
+const fallbackCover = new URL('../character-cutout.png', playlistURL).href;
 const themeIds = ['neon', 'midnight'];
 const sceneNames = ['绯红霓虹', '午夜电文'];
 const songScenes = new WeakMap();
@@ -62,6 +63,42 @@ let tracks = [];
 let renderWidth = 1;
 let renderHeight = 1;
 let pendingSeek = null;
+
+function videoURL(track) {
+  const id = typeof track.bvid === 'string' ? track.bvid.trim() : '';
+  return /^BV[0-9A-Za-z]+$/.test(id) ? `https://www.bilibili.com/video/${id}` : '';
+}
+
+function coverSrc(track) {
+  return typeof track.cover === 'string' && track.cover.trim()
+    ? new URL(track.cover, playlistURL).href
+    : fallbackCover;
+}
+
+function updateArtwork(track) {
+  const coverLink = $('track-cover-link');
+  const coverImage = $('track-cover-image');
+  const biliLink = $('track-bilibili');
+  const href = videoURL(track);
+  coverImage.src = coverSrc(track);
+  if (href) {
+    coverLink.href = href;
+    coverLink.target = '_blank';
+    coverLink.rel = 'noopener noreferrer';
+    coverLink.setAttribute('aria-label', `在哔哩哔哩观看《${track.title || '当前歌曲'}》`);
+    biliLink.href = href;
+    biliLink.title = '哔哩哔哩';
+    biliLink.hidden = false;
+  } else {
+    coverLink.removeAttribute('href');
+    coverLink.removeAttribute('aria-label');
+    coverLink.removeAttribute('target');
+    coverLink.removeAttribute('rel');
+    biliLink.removeAttribute('href');
+    biliLink.removeAttribute('title');
+    biliLink.hidden = true;
+  }
+}
 
 function clock(seconds) {
   const value = Number.isFinite(seconds) ? Math.max(0, seconds) : 0;
@@ -267,13 +304,31 @@ function updateTrackList() {
   $('track-count').textContent = String(tracks.length).padStart(2, '0');
   tracks.forEach((track, index) => {
     const li = document.createElement('li');
+    li.className = 'track-item';
+    const href = videoURL(track);
+    const thumb = document.createElement(href ? 'a' : 'span');
+    thumb.className = 'track-thumb';
+    if (href) {
+      thumb.href = href;
+      thumb.target = '_blank';
+      thumb.rel = 'noopener noreferrer';
+      thumb.setAttribute('aria-label', `在哔哩哔哩观看《${track.title || '未命名歌曲'}》`);
+    }
+    const img = document.createElement('img');
+    img.alt = '';
+    img.src = coverSrc(track);
+    img.loading = index < 12 ? 'eager' : 'lazy';
+    img.decoding = 'async';
+    thumb.append(img);
     const button = document.createElement('button');
     button.className = 'track-row';
     button.dataset.index = index;
-    button.setAttribute('aria-current', String(index === currentIndex));
+    if (index === currentIndex) button.setAttribute('aria-current', 'true');
+    else button.removeAttribute('aria-current');
     const number = document.createElement('span');
     number.className = 'track-number'; number.textContent = String(index + 1).padStart(2, '0');
     const info = document.createElement('span');
+    info.className = 'track-row-info';
     const title = document.createElement('strong'); title.textContent = track.title || '未命名歌曲';
     const artist = document.createElement('small'); artist.textContent = [`翻唱 ${track.artist || 'Komichi'}`, track.originalArtist && `原唱 ${track.originalArtist}`].filter(Boolean).join(' · ');
     info.append(title, artist);
@@ -282,24 +337,42 @@ function updateTrackList() {
     indicator.setAttribute('aria-hidden', 'true');
     button.append(number, info, indicator);
     button.addEventListener('click', () => selectTrack(index, true));
-    li.append(button); trackList.append(li);
+    li.append(thumb, button);
+    if (href) {
+      const bili = document.createElement('a');
+      bili.className = 'track-row-bili';
+      bili.href = href;
+      bili.target = '_blank';
+      bili.rel = 'noopener noreferrer';
+      bili.title = '哔哩哔哩';
+      bili.setAttribute('aria-label', `在哔哩哔哩打开《${track.title || '未命名歌曲'}》`);
+      bili.append($('track-bilibili').querySelector('svg').cloneNode(true));
+      li.append(bili);
+    }
+    trackList.append(li);
   });
   if (focusedIndex != null) trackList.querySelector(`[data-index="${Number(focusedIndex)}"]`)?.focus({ preventScroll: true });
 }
 
 function updateCredits(track) {
-  const entries = [
-    ['翻唱', track.artist], ['原唱', track.originalArtist],
-    ['作词', track.lyricist], ['作曲', track.composer], ['编曲', track.arranger],
-  ].filter(([, value]) => typeof value === 'string' && value.trim());
+  const groups = [
+    [['翻唱', track.artist], ['原唱', track.originalArtist]],
+    [['作词', track.lyricist], ['作曲', track.composer], ['编曲', track.arranger]],
+  ].map((group) => group.filter(([, value]) => typeof value === 'string' && value.trim()));
   $('credits-title').textContent = `${track.title || '当前歌曲'} · 歌曲信息`;
   $('credits-list').replaceChildren();
-  for (const [label, value] of entries) {
-    const term = document.createElement('dt'); term.textContent = label;
-    const description = document.createElement('dd'); description.textContent = value;
-    $('credits-list').append(term, description);
+  for (const group of groups) {
+    if (!group.length) continue;
+    const line = document.createElement('div');
+    line.className = 'credit-line';
+    for (const [label, value] of group) {
+      const term = document.createElement('dt'); term.textContent = label;
+      const description = document.createElement('dd'); description.textContent = value;
+      line.append(term, description);
+    }
+    $('credits-list').append(line);
   }
-  $('track-credits').hidden = entries.length === 0;
+  $('track-credits').hidden = groups.every((group) => group.length === 0);
 }
 
 function ensureLyrics() {
@@ -343,6 +416,7 @@ function selectTrack(index, autoplay = false, recordHistory = true) {
   lyricStatus.textContent = track.lyrics ? '开始播放后显示全屏歌词' : '这首歌尚未添加歌词';
   $('track-title').textContent = currentTitle;
   $('track-artist').textContent = `翻唱 ${track.artist || 'Komichi'}`;
+  updateArtwork(track);
   updateCredits(track);
   audio.src = new URL(track.audio, playlistURL).href;
   audio.load();
@@ -350,7 +424,10 @@ function selectTrack(index, autoplay = false, recordHistory = true) {
   updateTransport();
   updateTrackList();
   if ('mediaSession' in navigator && typeof MediaMetadata !== 'undefined') {
-    navigator.mediaSession.metadata = new MediaMetadata({ title: currentTitle, artist: track.artist || 'Komichi', album: '深夜电台' });
+    const artwork = typeof track.cover === 'string' && track.cover.trim()
+      ? [{ src: coverSrc(track), sizes: '960x540', type: 'image/jpeg' }]
+      : [];
+    navigator.mediaSession.metadata = new MediaMetadata({ title: currentTitle, artist: track.artist || 'Komichi', album: '深夜电台', artwork });
   }
   if (autoplay) void startPlayback();
 }
@@ -498,7 +575,7 @@ addEventListener('pageshow', refresh);
 
 async function loadPlaylist() {
   try {
-    const response = await fetch(playlistURL);
+    const response = await fetch(playlistURL, { cache: 'no-store' });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = await response.json();
     if (!Array.isArray(data.tracks)) throw new Error('playlist.tracks must be an array');

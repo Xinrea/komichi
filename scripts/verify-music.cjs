@@ -37,15 +37,28 @@ function silentWav(seconds = 15) {
     assert.equal(head.status(),206); assert.equal(head.headers()['content-length'],'100');
     // Keep the single-track end/repeat scenarios isolated from the growing library.
     const library = JSON.parse(fs.readFileSync(path.join(root, 'assets/music/playlist.json'), 'utf8'));
+    for (const track of library.tracks) {
+      assert.match(track.bvid, /^BV[0-9A-Za-z]+$/);
+      assert(fs.existsSync(path.join(root, 'assets/music', track.cover)), `${track.cover} missing`);
+    }
     await page.route('**/assets/music/playlist.json', route => route.fulfill({json:{tracks:[library.tracks[0]]}}));
     await page.goto(origin);
     await page.waitForFunction(()=>!document.querySelector('#music-play').disabled);
     const pageTitle = await page.title();
     assert.equal(pageTitle, '四时小路Komichi｜都市传说系虚拟主播个人主页');
     assert.equal(await page.locator('input[type="file"], #lyric-source, .radio-imports').count(), 0);
+    const firstVideo = `https://www.bilibili.com/video/${library.tracks[0].bvid}`;
+    assert.equal(await page.locator('#track-cover-link').getAttribute('href'), firstVideo);
+    assert.equal(await page.locator('#track-cover-link').getAttribute('target'), '_blank');
+    assert((await page.locator('#track-cover-image').evaluate((el) => el.currentSrc)).includes('daijoyuu-san.jpg'));
+    assert.equal(await page.locator('#track-bilibili').getAttribute('href'), firstVideo);
+    assert.equal(await page.locator('#track-bilibili').isVisible(), true);
     await page.locator('#music-list').click();
     assert((await page.locator('#credits-list').innerText()).includes('花隈千冬'));
     assert((await page.locator('#credits-list').innerText()).includes('いよわ'));
+    assert.equal(await page.locator('.track-thumb').first().getAttribute('href'), firstVideo);
+    assert((await page.locator('.track-thumb img').first().evaluate((el) => el.currentSrc)).includes('daijoyuu-san.jpg'));
+    assert.equal(await page.locator('.track-row-bili').first().getAttribute('href'), firstVideo);
     await page.locator('#music-list').click();
     await page.waitForFunction(() => !document.querySelector('#music-play').disabled);
     assert(!requests.some((url) => /folia\.(js|wasm)|cjk\.otf/.test(url)), 'Engine must be lazy');
@@ -147,6 +160,10 @@ function silentWav(seconds = 15) {
     await page.reload(); await page.setViewportSize({width:1440,height:900});
     await page.locator('#music-list').click();
     await page.waitForFunction(()=>document.querySelectorAll('.track-row').length===3);
+    assert.equal(await page.locator('#track-cover-link').getAttribute('href'), null);
+    assert(await page.locator('#track-bilibili').isHidden());
+    assert.equal(await page.locator('.track-thumb[href]').count(), 0);
+    assert.equal(await page.locator('.track-row-bili').count(), 0);
     const sceneAssignments = [];
     await page.locator('.track-row').nth(0).click();
     sceneAssignments.push(await page.locator('.lyric-atmosphere').evaluate(el => ({ ...el.dataset })));
@@ -191,6 +208,11 @@ function silentWav(seconds = 15) {
       const track=library.tracks[i];
       await creditsPage.locator('.track-row').nth(i).click();
       await creditsPage.waitForFunction(()=>document.querySelector('#lyric-status').textContent.includes('就绪'),null,{timeout:60000});
+      assert.equal(await creditsPage.locator('#track-cover-link').getAttribute('href'), `https://www.bilibili.com/video/${track.bvid}`);
+      assert((await creditsPage.locator('#track-cover-image').evaluate((el) => el.currentSrc)).includes(track.cover.split('/').pop()));
+      assert.equal(await creditsPage.locator('#track-bilibili').getAttribute('href'), `https://www.bilibili.com/video/${track.bvid}`);
+      assert.equal(await creditsPage.locator('.track-thumb').nth(i).getAttribute('href'), `https://www.bilibili.com/video/${track.bvid}`);
+      assert.equal(await creditsPage.locator('.track-row-bili').nth(i).getAttribute('href'), `https://www.bilibili.com/video/${track.bvid}`);
       const creditValues=await creditsPage.locator('#credits-list dd').allTextContents();
       assert(creditValues.includes(track.originalArtist));
       assert(creditValues.includes(track.composer));
