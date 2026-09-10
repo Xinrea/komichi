@@ -285,7 +285,7 @@ function silentWav(seconds = 15) {
         styles.push(hash);
         checkGL(entry.id);
       }
-      if (new Set(styles).size !== 3) throw new Error('The three themes must paint different compositions');
+      if (new Set(styles).size !== catalog.themes.length) throw new Error('Every embedded theme must paint a different composition');
       if (!module.ccall('folia_load','number',['string','string'],['/probe/test.lrc','/probe'])) throw new Error('Default theme reload failed');
       module._folia_set_seed(125);
       const changedSeed = stablePixels();
@@ -313,20 +313,20 @@ function silentWav(seconds = 15) {
         const status = JSON.parse(module.ccall('folia_status', 'string', [], []));
         if (status.missingGlyphs) throw new Error('Full-width spaces must not paint missing-glyph boxes');
       }
-      return { samples, ink, transparent, red, glError: gl.getError(), phaseErrors };
+      return { samples, ink, transparent, red, glError: gl.getError(), phaseErrors, themeIds: catalog.themes.map((entry) => entry.id) };
     });
     await probe.setViewportSize({ width: 1440, height: 900 });
     await probe.evaluate(() => { document.body.style.cssText = 'margin:0;background:#090c14'; });
-    for (let style = 0; style < 3; style++) {
+    assert(native.themeIds.length >= 3, 'The engine must embed at least three themes');
+    for (const themeId of native.themeIds) {
       for (const [width, height] of [[1440,900], [390,844]]) {
         await probe.setViewportSize({ width, height });
-        await probe.evaluate(({style,width,height}) => {
-          const themeId = ['minimal','neon','midnight'][style];
+        await probe.evaluate(({themeId,width,height}) => {
           if (!window.foliaProbe.ccall('folia_load','number',['string','string'],['/probe/spaces.lrc',`/probe/themes/${themeId}`])) throw new Error('Screenshot theme failed');
           window.foliaProbe._folia_set_seed(124);
           window.foliaProbe._folia_frame(2.5, width, height, 0);
-        }, {style,width,height});
-        await probe.screenshot({path:path.join(output, `scene-${style}-${width}.png`)});
+        }, {themeId,width,height});
+        await probe.screenshot({path:path.join(output, `scene-${themeId}-${width}.png`)});
       }
     }
     assert.equal(native.samples[0].text, '');
@@ -343,6 +343,6 @@ function silentWav(seconds = 15) {
     assert.equal(native.glError, 0);
     assert.deepEqual(native.phaseErrors, []);
     assert.deepEqual(errors, []);
-    console.log('PASS: persistent volume/mute, CRT stacking, three real Folia theme graphs and shader chains, MP3 range/seek, online lyrics, full-stage layout, all playlist modes, shuffle history, no import/source UI, song credits, embedded-theme WASM, CJK pixels, exact word timing, play/pause, seeks, gaps, effects, keyboard, mobile, reduced motion, malformed lyric recovery, playlist switching, offset, translations, transparent WebGL framebuffer.');
+    console.log('PASS: persistent volume/mute, CRT stacking, all embedded Folia theme graphs and shader chains, MP3 range/seek, online lyrics, full-stage layout, all playlist modes, shuffle history, no import/source UI, song credits, embedded-theme WASM, CJK pixels, exact word timing, play/pause, seeks, gaps, effects, keyboard, mobile, reduced motion, malformed lyric recovery, playlist switching, offset, translations, transparent WebGL framebuffer.');
   } finally { await browser.close(); }
 })().catch((error) => { console.error(error); process.exitCode = 1; });

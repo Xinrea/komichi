@@ -15,14 +15,16 @@ const motion = matchMedia('(prefers-reduced-motion: reduce)');
 const assetBase = new URL('./assets/folia/', import.meta.url);
 const playlistURL = new URL('./assets/music/playlist.json', import.meta.url);
 const fallbackCover = new URL('../character-cutout.png', playlistURL).href;
-const themeIds = ['neon', 'midnight'];
-const sceneNames = ['绯红霓虹', '午夜电文'];
+// Animated stages embedded in the engine (see folia-light web/themes/index.json). Each song
+// draws one at random; a bag guarantees every stage appears before any repeats.
+const themeIds = ['neon', 'midnight', 'mindscape', 'tilt', 'partita'];
+const sceneNames = ['绯红霓虹', '午夜电文', '心象漫游', '倾斜诗笺', '错落组曲'];
 const songScenes = new WeakMap();
 let sceneBag = [];
 function sceneFor(track) {
   if (!songScenes.has(track)) {
     if (!sceneBag.length) {
-      sceneBag = [0, 1];
+      sceneBag = themeIds.map((_, index) => index);
       for (let i = sceneBag.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [sceneBag[i], sceneBag[j]] = [sceneBag[j], sceneBag[i]];
@@ -230,14 +232,22 @@ async function fetchBytes(url, signal, limit = Infinity) {
 function loadEngine() {
   if (enginePromise) return enginePromise;
   enginePromise = (async () => {
+    // folia.js and folia.wasm are a matched pair. CDN/browser caches of either alone
+    // produce LinkError on env.invoke_* imports. Pin both to the same content digest.
+    const buildInfo = await fetch(new URL('build-info.json', assetBase), { cache: 'no-store' }).then((response) => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}: build-info.json`);
+      return response.json();
+    });
+    const foliaRev = String(buildInfo.sourceDigest || buildInfo.outputs?.['folia.wasm'] || '').slice(0, 16);
+    if (!foliaRev) throw new Error('Folia build-info is missing sourceDigest');
     const [{ default: createFolia }, font] = await Promise.all([
-      import('./assets/folia/folia.js'),
+      import(`./assets/folia/folia.js?v=${foliaRev}`),
       fetchBytes(new URL('cjk.otf', assetBase)),
     ]);
     pinPageTitle();
     const module = await createFolia({
       canvas,
-      locateFile: (file) => new URL(file, assetBase).href,
+      locateFile: (file) => new URL(`${file}?v=${foliaRev}`, assetBase).href,
       print: () => {},
       printErr: (message) => console.warn('Folia:', message),
     });
@@ -253,6 +263,46 @@ function loadEngine() {
     throw error;
   });
   return enginePromise;
+}
+
+// The browser's dictionary-based word segmenter groups CJK characters into real words, so the
+// stage can fly a word in as one piece while still lighting its characters one by one. Without
+// Intl.Segmenter the engine falls back to its own script heuristic.
+const segmenterCache = new Map();
+function wordSegmenter(language) {
+  if (typeof Intl === 'undefined' || typeof Intl.Segmenter !== 'function') return null;
+  const key = language || 'und';
+  if (!segmenterCache.has(key)) {
+    try { segmenterCache.set(key, new Intl.Segmenter(language || undefined, { granularity: 'word' })); }
+    catch { segmenterCache.set(key, null); }
+  }
+  return segmenterCache.get(key);
+}
+
+function guessLanguage(texts) {
+  const sample = texts.join('\n');
+  if (/[\u3040-\u30ff]/.test(sample)) return 'ja';
+  if (/[\uac00-\ud7af]/.test(sample)) return 'ko';
+  if (/[\u4e00-\u9fff]/.test(sample)) return 'zh';
+  return undefined;
+}
+
+function applyWordGroups(module, track) {
+  try {
+    const texts = JSON.parse(module.ccall('folia_texts', 'string', [], []));
+    const segmenter = wordSegmenter(track.language || guessLanguage(texts));
+    if (!segmenter) return;
+    const phrases = texts.map((text) => {
+      if (!text) return [];
+      const parts = Array.from(segmenter.segment(text), (segment) => segment.segment);
+      return parts.join('') === text ? parts : [text];
+    });
+    if (!module.ccall('folia_set_phrases', 'number', ['string'], [JSON.stringify(phrases)])) {
+      console.warn('Folia phrases:', engineError());
+    }
+  } catch (error) {
+    console.warn('Folia phrases:', error);
+  }
 }
 
 function loadSongTheme(module, style) {
@@ -286,6 +336,7 @@ async function prepareLyrics(track, token, signal) {
     module.FS.unlink(path);
     if (!ok) throw new Error(engineError());
     module._folia_set_seed(scene.seed);
+    applyWordGroups(module, track);
     ready = true;
     lyricStatus.textContent = `背景歌词已就绪 · ${sceneNames[scene.style]}`;
     refresh();
