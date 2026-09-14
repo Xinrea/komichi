@@ -3,7 +3,7 @@
   "target": "web",
   "baseRevision": "ffcbd6441c292e9c8c0056d6a9ccc6b6d04e0a4b",
   "compiler": "emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 4.0.14 (96371ed7888fc78c040179f4d4faa82a6a07a116)",
-  "sourceDigest": "830bb5852cc28998ba0efca086d545aadf89edff1dd857499d842a065b5b2716",
+  "sourceDigest": "15bfe7a8694961c5620e89082f755d1e60fe5438a6e57be6be3b05c50910b6fb",
   "sources": {
     "include/folia/audio.hpp": "247ebc18498ad1eec9a978926b8e5ec3ae779518c13e3fa39ca05cbb4ad4f9cf",
     "include/folia/browser.hpp": "482b092f701c6422e716cd41d5ffe61f2d483b4f08fc8d7d18dac524d7015f8a",
@@ -18,7 +18,7 @@
     "include/folia/text.hpp": "5216e5d957b19c35c83d2afc2a00be21d935881b4c2294a72555e777d0c2fbcd",
     "include/folia/theme.hpp": "a39f620771d448d723eaf8824b907ab6558839c976d5b059de91d206c3e76f9d",
     "scripts/build-web.sh": "a0fcc5a5d119270f6e5afe12d1f1e3702c1a6c7106cc51b3f88d511e06a2f450",
-    "scripts/package-web.py": "a5d70bbb1bb363deddb5ce57aee576bb419e62e112b9097bf7d879a54f485a9b",
+    "scripts/package-web.py": "9e13447575035a08a914d39dbed08c61ad4864da51389a3977329f51fdc5f0d4",
     "src/diagnostics.cpp": "1850c6ecdee6b0876eea076b2f07a4e0b9811d8e280c89ee7c6d771fe345e0e4",
     "src/lyrics.cpp": "2fb774df9e41d2faf3e30839eb591f9f86e44fc15a976cdac7184a0b50b7a4f4",
     "src/player.cpp": "47742a6a52397ae6001a6073d3195a8b795d998e80fc9ceea1755e8f40f2cc31",
