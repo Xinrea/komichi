@@ -1,3 +1,5 @@
+import { loadStageTheme } from './lyric-layout.js?v=1';
+
 const $ = (id) => document.getElementById(id);
 const audio = $('music-audio');
 const player = $('music-player');
@@ -65,6 +67,8 @@ let tracks = [];
 let renderWidth = 1;
 let renderHeight = 1;
 let pendingSeek = null;
+let stagePortrait = false;
+let lyricSourcePath = '';
 
 function videoURL(track) {
   const id = typeof track.bvid === 'string' ? track.bvid.trim() : '';
@@ -205,6 +209,20 @@ function measure() {
   const rect = atmosphere.getBoundingClientRect();
   renderWidth = Math.max(1, Math.min(2560, Math.round(rect.width)));
   renderHeight = Math.max(1, Math.min(1600, Math.round(rect.height)));
+  const portrait = renderWidth < 780;
+  if (ready && stagePortrait !== portrait) {
+    // Reload only at the layout breakpoint, retaining the song's seed and exact audio time.
+    const track = tracks[currentIndex];
+    const scene = sceneFor(track);
+    const path = loadSongTheme(engine, scene.style);
+    if (!engine.ccall('folia_load', 'number', ['string', 'string'], [lyricSourcePath, path])) {
+      hideLyrics();
+      lyricRequested = -1;
+      return;
+    }
+    engine._folia_set_seed(scene.seed);
+    applyWordGroups(engine, track);
+  }
   refresh();
 }
 
@@ -306,12 +324,8 @@ function applyWordGroups(module, track) {
 }
 
 function loadSongTheme(module, style) {
-  // Theme JSON and shaders are compiled into the engine distribution in folia-light.
-  const path = `/folia/themes/${themeIds[style]}`;
-  if (!module.FS.analyzePath(`${path}/cjk.otf`).exists) {
-    module.FS.writeFile(`${path}/cjk.otf`, module.FS.readFile('/komichi/cjk.otf'), { canOwn: true });
-  }
-  return path;
+  stagePortrait = renderWidth < 780;
+  return loadStageTheme(module, themeIds[style], renderWidth);
 }
 
 async function prepareLyrics(track, token, signal) {
@@ -333,6 +347,9 @@ async function prepareLyrics(track, token, signal) {
     const path = `/komichi/lyrics.${extension}`;
     module.FS.writeFile(path, bytes);
     const ok = module.ccall('folia_load', 'number', ['string', 'string'], [path, themePath]);
+    // Keep the parsed source available for switching between portrait and desktop layouts.
+    lyricSourcePath = `/komichi/current-lyrics.${extension}`;
+    module.FS.writeFile(lyricSourcePath, bytes);
     module.FS.unlink(path);
     if (!ok) throw new Error(engineError());
     module._folia_set_seed(scene.seed);

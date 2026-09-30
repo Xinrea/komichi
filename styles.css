@@ -59,6 +59,33 @@ a { color: inherit; }
   opacity: 1;
   mix-blend-mode: multiply;
 }
+/* The eyes in the existing full-body cutout sit at 50% / 21% of the source.
+   Crop with a background so the browser paints only a viewport-sized echo. */
+.crt-face-echo {
+  --face-echo-size: max(680vw, 600vh);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background-image: var(--face-echo-image, url('./assets/character-cutout.png?v=4'));
+  background-repeat: no-repeat;
+  background-size: var(--face-echo-size) auto;
+  background-position: 50% calc(42vh - var(--face-echo-size) * .366);
+  mix-blend-mode: screen;
+  filter: saturate(.55) contrast(1.08);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 43%, #000 18%, #0009 63%, transparent 100%);
+  mask-image: radial-gradient(ellipse at 50% 43%, #000 18%, #0009 63%, transparent 100%);
+}
+.crt-overlay.is-glitching.has-face-echo .crt-face-echo {
+  animation: crtFaceEcho .42s steps(1, end) 1;
+}
+@keyframes crtFaceEcho {
+  0%, 12% { opacity: .13; transform: translate(5px, -2px) scale(1.025); }
+  20% { opacity: .035; transform: translate(-7px, 1px); }
+  35% { opacity: .16; transform: translate(-3px, 0) scale(1.015); }
+  55% { opacity: .08; transform: translate(3px, -1px); }
+  60%, 100% { opacity: 0; transform: none; }
+}
 .crt-scanlines::before {
   content: "";
   position: absolute;
@@ -608,6 +635,7 @@ a { color: inherit; }
   .crt-scanlines::after,
   .crt-rgb,
   .crt-glitch,
+  .crt-face-echo,
   .crt-glitch::before,
   .crt-glitch::after,
   .theater,
@@ -617,4 +645,5 @@ a { color: inherit; }
   }
   .crt-scanlines::after { opacity: 0; }
   .crt-glitch { opacity: 0; }
+  .crt-face-echo { display: none; }
 }

@@ -89,7 +89,7 @@ function silentWav(seconds = 15) {
     await page.locator('#music-play').click();
     await page.waitForFunction(() => document.querySelector('#lyric-status').textContent.includes('就绪'), null, { timeout: 60000 });
     assert.equal(await page.title(), pageTitle, 'Lyrics mode must keep the original document title');
-    assert(requests.some((url)=>url.endsWith('folia.wasm')));
+    assert(requests.some((url)=>new URL(url).pathname.endsWith('folia.wasm')));
     await page.locator('#music-play').click();
     const at = await page.locator('#music-audio').evaluate(el=>el.currentTime);
     await page.waitForTimeout(120);

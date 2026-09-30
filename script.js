@@ -10,6 +10,16 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const mobilePerformerDrop = 12;
 const GLITCH_MIN_MS = 4200;
 const GLITCH_MAX_MS = 6800;
+const FACE_ECHO_CHANCE = .25;
+
+// Keep the face echo tied to the actual performer asset, including later replacements.
+function syncFaceEcho() {
+  if (performerImage.complete && performerImage.naturalWidth) {
+    crtOverlay?.style.setProperty('--face-echo-image', `url(${JSON.stringify(performerImage.currentSrc || performerImage.src)})`);
+  }
+}
+performerImage.addEventListener('load', syncFaceEcho);
+syncFaceEcho();
 
 const scenes = [
   { x: 70, y: 56, mobileY: 35, r: 5 },
@@ -41,20 +51,22 @@ function randBetween(min, max) {
 }
 
 function triggerGlitch() {
-  if (reduceMotion.matches) return;
+  if (reduceMotion.matches || document.hidden) return;
 
   theater.classList.remove('is-glitching');
-  crtOverlay?.classList.remove('is-glitching');
+  crtOverlay?.classList.remove('is-glitching', 'has-face-echo');
   // Force reflow so repeated glitch bursts retrigger CSS animations.
   void theater.offsetWidth;
 
   theater.classList.add('is-glitching');
   crtOverlay?.classList.add('is-glitching');
+  // Draw once per actual burst; the CRT glitch itself always runs.
+  if (Math.random() < FACE_ECHO_CHANCE) crtOverlay?.classList.add('has-face-echo');
 
   clearTimeout(glitchClearTimer);
   glitchClearTimer = setTimeout(() => {
     theater.classList.remove('is-glitching');
-    crtOverlay?.classList.remove('is-glitching');
+    crtOverlay?.classList.remove('is-glitching', 'has-face-echo');
   }, 450);
 }
 
@@ -183,7 +195,7 @@ reduceMotion.addEventListener('change', () => {
     clearTimeout(glitchTimer);
     clearTimeout(glitchClearTimer);
     theater.classList.remove('is-glitching');
-    crtOverlay?.classList.remove('is-glitching');
+    crtOverlay?.classList.remove('is-glitching', 'has-face-echo');
   } else {
     scheduleGlitch();
   }

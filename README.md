@@ -22,6 +22,10 @@ python3 scripts/serve.py
 
 Folia Light 的引擎源码、Web 适配、主题与构建均在独立的 `folia-light` 仓库维护。本仓库只使用 `assets/folia/` 内的 WASM、生成的 JS 加载器、字体和许可文件；更新与验证见 [WASM 产物说明](assets/folia/README.md)。
 
+本站的 `lyric-layout.js` 在运行时从嵌入主题生成桌面与手机排版配置，放大主歌词、扩大排版宽度，并保留逐字动画、原主题配色和 shader。切换 780px 布局断点时保持当前播放位置和歌曲种子。每次 CRT glitch 开始时独立以 25% 概率同步闪现现有角色立绘的全屏面部特写，持续 420ms、峰值透明度 16%；系统开启减少动态效果时关闭闪影。
+
+视觉验证：启动本地预览后运行 `node scripts/verify-visual.cjs`（需 Playwright 和 Chrome）。覆盖五套主题的真实 WebGL/CJK 渲染、歌词可见像素增长、桌面/手机布局切换、面部闪影同步与清理、减少动态效果；截图保存在 `test-results/visual/`。
+
 ## SEO 配置
 
 正式站点地址为 `https://komichi.cn/`。Canonical、社交分享信息、结构化数据、robots 和 sitemap 均已使用此域名。
